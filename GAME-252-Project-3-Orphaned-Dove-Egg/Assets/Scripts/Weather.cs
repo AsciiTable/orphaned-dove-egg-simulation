@@ -9,6 +9,7 @@ public class Weather
         Cloudy,
         StrongWinds,
         HeavyRain,
+        LightRain,
         Null
     }
 
