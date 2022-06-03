@@ -16,11 +16,13 @@ public class DataManager : MonoBehaviour
     private static List<Weather> nightWeather = new List<Weather>();
     private static Vector2 treePosition = Vector2.zero;
 
-    // Start is called before the first frame update
+    private static float probabilityAbandoned = 0.0f;
+
     void Awake(){
         if (runDefault) {
             RunDefaultData();
         }
+        probabilityAbandoned = 0.0f;
     }
 
     // Update is called once per frame
@@ -91,5 +93,10 @@ public class DataManager : MonoBehaviour
         SetWeather(true, CLEARSKIES, 42);   // 4/17 night
         SetWeather(false, CLEARSKIES, 64);  // 4/17 day
         SetWeather(true, CLEARSKIES, 43);   // 4/18 night
+    }
+
+    public static string GetProbabilityString() {
+        int prob = (int)(probabilityAbandoned * 100);
+        return prob.ToString() + "%";
     }
 }
