@@ -17,12 +17,26 @@ public class DataManager : MonoBehaviour
     private static Vector2 treePosition = Vector2.zero;
 
     private static float probabilityAbandoned = 0.0f;
+    private int currentDay = 0;
 
     void Awake(){
         if (runDefault) {
             RunDefaultData();
         }
-        probabilityAbandoned = 0.0f;
+        //probabilityAbandoned = 0.0f;
+        probabilityAbandoned = 0.9f;        // April probability
+    }
+
+    private void OnEnable()
+    {
+        SceneHandler.OnSunrise += ChangeWeatherMorning;
+        SceneHandler.OnSunset += ChangeWeatherNight;
+    }
+
+    private void OnDisable()
+    {
+        SceneHandler.OnSunrise -= ChangeWeatherMorning;
+        SceneHandler.OnSunset -= ChangeWeatherNight;
     }
 
     // Update is called once per frame
@@ -98,5 +112,32 @@ public class DataManager : MonoBehaviour
     public static string GetProbabilityString() {
         int prob = (int)(probabilityAbandoned * 100);
         return prob.ToString() + "%";
+    }
+
+    public static void ChangeProbability(float delta) {
+        probabilityAbandoned += delta;
+    }
+
+    private void ChangeWeatherMorning() {
+        AbandonWeatherCalc(dayWeather);
+    }
+
+    private void ChangeWeatherNight() {
+        AbandonWeatherCalc(nightWeather);
+        currentDay++;
+        if (currentDay >= nightWeather.Count) {
+            Debug.Log("End day: " + currentDay);
+            currentDay = 0;
+            SceneHandler.endOfSim = true;
+        }
+    }
+
+    private void AbandonWeatherCalc(List<Weather> wl) { 
+        if(wl[currentDay].wType == Weather.WeatherType.LightRain || wl[currentDay].wType == Weather.WeatherType.HeavyRain || wl[currentDay].wType == Weather.WeatherType.StrongWinds){
+            ChangeProbability(0.01f);
+        }
+        if (wl[currentDay].temperatureF < 45) {
+            ChangeProbability(0.005f);
+        }
     }
 }

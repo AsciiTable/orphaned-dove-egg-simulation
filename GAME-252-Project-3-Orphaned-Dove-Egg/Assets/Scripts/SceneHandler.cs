@@ -36,6 +36,8 @@ public class SceneHandler : MonoBehaviour
     public delegate void Tick();
     public static Tick OnTick;
 
+    public static bool endOfSim = false;
+
     private void Awake()
     {
         if (useSpecificSeed){
@@ -54,14 +56,19 @@ public class SceneHandler : MonoBehaviour
         nextUpdateTime = Time.time + (1.0f / timeScale);
         timeText.text = TimeToString();
         sunRose = true;
+        endOfSim = false;
     }
 
     void Update()
     {
+        if (endOfSim) {
+            Time.timeScale = 0.0f;
+            return;
+        }
         if (Time.time >= nextUpdateTime) {
             if(OnTick != null)
                 OnTick();
-            timeMinute += 15;
+            timeMinute += 60;
             if (timeMinute >= 60) {
                 timeMinute = 0;
                 timeHour += 1;
@@ -117,6 +124,7 @@ public class SceneHandler : MonoBehaviour
         else {
             Random.InitState((int)System.DateTime.Now.Ticks);
         }
+        Time.timeScale = 1.0f;
         valueRequested = false;
     }
 

@@ -54,8 +54,8 @@ public class DoveBehavior : MonoBehaviour
         if (isStartled) {
             stressLevel++;
             isStartled = false;
+            DataManager.ChangeProbability(0.005f);
         }
-        
     }
 
     private void SwitchNestStates(NestState newNestState) {
@@ -129,6 +129,5 @@ public class DoveBehavior : MonoBehaviour
         Debug.Log("Rolling for return: " + roll);
         if (roll <= probabilityReturn)
             SwitchNestStates(NestState.Both);
-
     }
 }
