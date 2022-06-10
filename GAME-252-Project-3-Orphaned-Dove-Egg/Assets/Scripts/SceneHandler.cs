@@ -68,7 +68,7 @@ public class SceneHandler : MonoBehaviour
         if (Time.time >= nextUpdateTime) {
             if(OnTick != null)
                 OnTick();
-            timeMinute += 60;
+            timeMinute += 15;
             if (timeMinute >= 60) {
                 timeMinute = 0;
                 timeHour += 1;
